@@ -1,0 +1,12 @@
+//variables
+integer cash;
+string name;
+
+name = "Ilya";
+cash = 1403
+
+while (cash > 1203) {
+  if (name == "Ilya") {
+    cash = cash - 10;
+  }
+}

@@ -1,0 +1,12 @@
+integer cash;
+char ch = 'e' 
+string name;
+
+name = "Ilya";
+cash = 1403
+
+if (cash > 1203) {
+  cash = cash - 1203;
+} else {
+  cash = cash + 1203 
+} 

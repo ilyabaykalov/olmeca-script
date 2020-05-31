@@ -1,0 +1,4 @@
+integer a;
+a = 12;
+
+integer b = 10;

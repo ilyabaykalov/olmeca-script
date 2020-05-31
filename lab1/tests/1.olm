@@ -1,0 +1,8 @@
+integer cash;
+string name = "Ilya";
+
+cash = 1403
+
+if (cash > 1203) {
+  cash = cash - 1203;
+} 

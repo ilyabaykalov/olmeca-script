@@ -1,0 +1,18 @@
+# general
+/.idea/
+.DS_Store
+
+/Olmeca.docx
+
+# lab1
+/lab1/.DS_Store
+
+/lab1/a.out
+/lab1/lex.yy.c
+/lab1/lab1.docx
+
+# lab2
+/lab2/.DS_Store
+
+/lab2/.idea/
+/lab2/olmeca
