@@ -1,4 +1,4 @@
-# Olmeca Script - новый ЯП
+# Olmeca Script
 
 ## lab 1
 ### Отчет находится в папке lab1
