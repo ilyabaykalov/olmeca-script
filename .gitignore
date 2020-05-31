@@ -16,3 +16,16 @@
 
 /lab2/.idea/
 /lab2/olmeca
+/lab2/ast.o
+/lab2/location.hh
+/lab2/olmeca.o
+/lab2/olmeca_driver.o
+/lab2/olmeca_lang.hpp
+/lab2/olmeca_lang.cpp
+/lab2/olmeca_lang.o
+/lab2/olmeca_lang.output
+/lab2/olmeca_lexer.cpp
+/lab2/olmeca_lexer.o
+/lab2/symtable.o
+/lab2/stack.hh
+/lab2/position.hh
