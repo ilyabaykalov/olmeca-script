@@ -46,7 +46,6 @@ static TSymbolTable* g_TopLevelUserVariableTable = CreateUserVariableTable(NULL)
 static TSymbolTable* currentTable = g_TopLevelUserVariableTable;
 }
 
-
 %union {
   NodeAST* node;
   float fNumber;
@@ -56,41 +55,42 @@ static TSymbolTable* currentTable = g_TopLevelUserVariableTable;
   char comparison[3];
   char ch[1];
 }
-%token EOFILE 0 "end of file"
-%token INTEGER_TYPE "int"
-%token <iNumber> INTEGER_CONST  "integer"
-%token FLOAT_TYPE "float type"
-%token <fNumber> FLOAT_CONST  "float"
-%token STRING_TYPE
-%token CHAR_TYPE
-%token <string> STRING_CONST
-%token <ch> CHAR_CONST
-%token ASSIGN "="
-%token <identifier> IDENTIFIER "name"
-%token SEMICOLON  ";"
-%token COLON  ":"
-%token ADD  "+"
-%token SUBSTRACT "-"
-%token <comparison>   MULOPERATOR     "mulop"
-%token <comparison> COMPARE "compare"
-%token OPENPAREN "("
-%token CLOSEPAREN ")"
-%token OPENBRACE " {"
-%token CLOSEBRACE "}"
-%token IF "if"
-%token ELSE "else"
-%token WHILE "while"
-%token IFX
-%token COMMA ","
-%type <node> expr condition assignment statement compound_statement statement_list statement_list_tail declaration loop_head loop_statement prog
+
+%token 			EOFILE 0 	"end of file"
+%token 			INTEGER_TYPE 	"int"
+%token	<iNumber>	INTEGER_CONST  	"integer"
+%token 			FLOAT_TYPE 	"float type"
+%token	<fNumber> 	FLOAT_CONST  	"float"
+%token 			STRING_TYPE
+%token 			CHAR_TYPE
+%token	<string> 	STRING_CONST
+%token	<ch> 		CHAR_CONST
+%token 			ASSIGN 		"="
+%token	<identifier> 	IDENTIFIER 	"name"
+%token 			SEMICOLON  	";"
+%token 			COLON  		":"
+%token 			ADD  		"+"
+%token 			SUBSTRACT 	"-"
+%token	<comparison>   	MULOPERATOR     "mulop"
+%token	<comparison> 	COMPARE 	"compare"
+%token 			OPENPAREN 	"("
+%token 			CLOSEPAREN 	")"
+%token 			OPENBRACE 	"{"
+%token 			CLOSEBRACE	"}"
+%token 			IF 		"if"
+%token 			ELSE 		"else"
+%token 			WHILE 		"while"
+%token 			IFX
+%token 			COMMA 		","
+%type	<node> expr condition assignment statement compound_statement statement_list statement_list_tail declaration loop_head loop_statement prog
 %nonassoc IFX
 %nonassoc ELSE
 
-%right ASSIGN
-%left COMPARE
-%left ADD SUBSTRACT
-%left MULOPERATOR
-%right UMINUS
+%right 	ASSIGN
+%left 	COMPARE
+%left 	ADD SUBSTRACT
+%left 	MULOPERATOR
+%right 	UMINUS
 
 %start prog
 
@@ -106,7 +106,6 @@ prog :
     }
     driver.result = 0;
   };
-
 
 statement_list :
   statement statement_list_tail {
@@ -125,7 +124,6 @@ statement_list_tail :
     $$ = $1;
   };
 
-
 statement :
   assignment
   | condition
@@ -142,7 +140,6 @@ compound_statement :
     $$ = $3;
     HideUserVariableTable(currentTable); currentTable = currentTable->parentTable;
   };
-
 
 assignment :
   IDENTIFIER ASSIGN expr SEMICOLON {
