@@ -17,6 +17,7 @@ typedef enum {
   typeIfStatement,
   typeWhileStatement,
   typeFunctionStatement,
+  typeFunctionCall,
   typeList,
   typeError
 } NodeTypeEnum;
@@ -51,6 +52,7 @@ typedef struct {
   NodeTypeEnum nodeType;
   TValueNode *funcName;
   NodeAST *funcBody;
+  TValueNode *returnedValue;
 } TFunctionNode;
 
 #ifndef _SYMBOL_TABLE_HPP
@@ -82,7 +84,9 @@ NodeAST *CreateCharNode(char *ch);
 NodeAST *CreateErrorNode(const char*error);
 
 NodeAST *CreateControlFlowNode(NodeTypeEnum nodeType, NodeAST *condition, NodeAST *trueBranch, NodeAST *elseBranch);
-NodeAST *CreateFunctionNode(NodeTypeEnum nodeType, std::string *funcName, NodeAST *funcBody);
+NodeAST *CreateFunctionNode(std::string *funcName, NodeAST *funcBody, int returnedValue);
+NodeAST *CallFunctionNode(std::string *funcName);
+
 NodeAST *CreateReferenceNode(TSymbolTableElementPtr symbol);
 NodeAST *CreateAssignmentNode(TSymbolTableElementPtr symbol, NodeAST *rightValue);
 

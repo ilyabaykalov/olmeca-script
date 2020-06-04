@@ -54,6 +54,7 @@ if                              { return token::IF; }
 else                            { return token::ELSE; }
 while                           { return token::WHILE; }
 function                        { return token::FUNCTION; }
+return                          { return token::RETURN; }
 
 \;                              { return token::SEMICOLON;}
 \:                              { return token::COLON;}

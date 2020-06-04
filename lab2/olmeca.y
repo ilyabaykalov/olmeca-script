@@ -39,6 +39,8 @@
 
 static std::string ErrorMessageVariableNotDeclared(std::string);
 static std::string ErrorMessageVariableDoublyDeclared(std::string);
+static std::string ErrorMessageFunctionNotDeclared(std::string);
+static std::string ErrorMessageFunctionDoublyDeclared(std::string);
 
 int g_LoopNestingCounter = 0;
 
@@ -81,6 +83,7 @@ static TSymbolTable* currentTable = g_TopLevelUserVariableTable;
 %token 			ELSE 		"else"
 %token 			WHILE 		"while"
 %token 			FUNCTION 	"function"
+%token 			RETURN  	"return"
 %token 			IFX
 %token 			COMMA 		","
 %type	<node> expr condition function assignment statement compound_statement statement_list statement_list_tail declaration loop_head loop_statement prog
@@ -248,14 +251,22 @@ condition :
   };
 
 function :
-  FUNCTION IDENTIFIER OPENPAREN CLOSEPAREN OPENBRACE statement_list CLOSEBRACE {
-    TSymbolTableElementPtr funcId = LookupUserVariableTableRecursive(currentTable, *$2);
-    if (NULL != funcId) {
-          yyerror(ErrorMessageVariableNotDeclared(*$2));
+  FUNCTION IDENTIFIER OPENPAREN CLOSEPAREN OPENBRACE statement_list RETURN INTEGER_CONST SEMICOLON CLOSEBRACE {
+    TSymbolTableElementPtr func = LookupUserVariableTableRecursive(currentTable, *$2);
+    if (func != NULL) {
+      yyerror(ErrorMessageFunctionDoublyDeclared(*$2));
     } else {
-      InsertUserVariableTable(currentTable, *$2, typeFunction, funcId);
+      InsertUserVariableTable(currentTable, *$2, typeFunction, func);
     }
-    $$ = CreateFunctionNode(typeFunctionStatement, $2, $6);
+    $$ = CreateAssignmentNode(func, CreateFunctionNode($2, $6, $8));
+  }
+  | IDENTIFIER OPENPAREN CLOSEPAREN SEMICOLON {
+    TSymbolTableElementPtr func = LookupUserVariableTableRecursive(currentTable, *$1);
+    if (func == NULL) {
+      yyerror(ErrorMessageFunctionNotDeclared(*$1));
+    } else {
+      $$ = CallFunctionNode($1);
+    }
   };
 
 loop_statement :
@@ -350,8 +361,17 @@ static std::string ErrorMessageVariableNotDeclared(std::string name) {
   return errorDeclaration;
 }
 
+static std::string ErrorMessageFunctionNotDeclared(std::string name) {
+  std::string errorDeclaration = "error - Function " + name + " isn't declared";
+  return errorDeclaration;
+}
+
 static std::string ErrorMessageVariableDoublyDeclared(std::string name) {
   std::string errorDeclaration = "error - Variable " + name + " is already declared";
   return errorDeclaration;
 }
 
+static std::string ErrorMessageFunctionDoublyDeclared(std::string name) {
+  std::string errorDeclaration = "error - Function " + name + " is already declared";
+  return errorDeclaration;
+}

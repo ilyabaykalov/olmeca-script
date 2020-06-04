@@ -1,5 +1,3 @@
-
-
 #ifndef _SYMBOL_TABLE_HPP
 #define _SYMBOL_TABLE_HPP
 

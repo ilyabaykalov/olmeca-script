@@ -91,11 +91,35 @@ NodeAST *CreateControlFlowNode(NodeTypeEnum nodeType, NodeAST *condition, NodeAS
   return reinterpret_cast<NodeAST *>(a);
 }
 
-NodeAST *CreateFunctionNode(NodeTypeEnum nodeType, std::string *funcName, NodeAST *funcBody) {
+NodeAST *CreateFunctionNode(std::string *funcName, NodeAST *funcBody, int returnedValue) {
   TFunctionNode *a = new TFunctionNode;
 
-  a->nodeType = nodeType;
+  a->nodeType = typeFunctionStatement;
   a->funcBody = funcBody;
+
+  TValueNode *name = new TValueNode;
+
+  name->nodeType = typeStringConst;
+  name->valueType = typeString;
+  name->str = funcName;
+
+  a->funcName = name;
+
+  TValueNode *retVal = new TValueNode;
+
+  retVal->nodeType = typeIntConst;
+  retVal->valueType = typeInt;
+  retVal->iNumber = returnedValue;
+
+  a->returnedValue = retVal;
+
+  return reinterpret_cast<NodeAST *>(a);
+}
+
+NodeAST *CallFunctionNode(std::string *funcName) {
+TFunctionNode *a = new TFunctionNode;
+
+  a->nodeType = typeFunctionCall;
 
   TValueNode *name = new TValueNode;
 
@@ -191,29 +215,15 @@ void PrintAST(NodeAST *a, int level) {
           std::cout << "char " << (((TValueNode *)a)->ch) << std::endl;
           break;
 
-        case typeIdentifier: {
-          TSymbolTableElementPtr tmp = ((TSymbolTableReference *)a)->variable;
-          std::cout << "variable ";
-          std::string name = "";
-          if (NULL != tmp) {
-            name = *(tmp->table->data[tmp->index].name);
-            std::cout << name;
-          } else {
-            std::cout << "(bad reference)";
-            name = "(bad reference)";
-          }
-          std::cout << std::endl;
-          return;
-        }
-
         case typeBinaryOp:
           std::cout << "operation " << a->opValue << std::endl;
           PrintAST(a->left, level + 1);
           PrintAST(a->right, level + 1);
           break;
 
+        case typeIdentifier:
         case typeList:
-          std::cout << "variable ";
+          std::cout << "var ";
           PrintAST(a->left, level + 1);
           PrintAST(a->right, level + 1);
           break;
@@ -269,20 +279,12 @@ void PrintAST(NodeAST *a, int level) {
           break;
 
         case typeFunctionStatement:
-          std::cout << "function ";
-          std::cout << *((((TFunctionNode *)a)->funcName)->str) << std::endl;
+          std::cout << "function " << *(((TFunctionNode *)a)->funcName)->str << std::string(2 * level, ' ') << std::endl;
           PrintAST(((TFunctionNode *)a)->funcBody, level);
+          break;
 
-//          TSymbolTableElementPtr tmp = ((TSymbolTableReference *)a)->variable;
-//          std::cout << "variable ";
-//          std::string name = "";
-//          if (NULL != tmp) {
-//          std::string name = *(tmp->table->data[tmp->index].name);
-//            std::cout << name;
-//          } else {
-//            std::cout << "(bad reference)";
-//            name = "(bad reference)";
-//          }
+        case typeFunctionCall:
+          std::cout << "call function " << *((((TFunctionNode *)a)->funcName)->str) << std::string(2 * level, ' ') << std::endl;
           break;
     }
   }
