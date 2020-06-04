@@ -1,0 +1,4 @@
+function someName() {
+    integer test = 1;
+    integer test1 = 12;
+}

@@ -5,7 +5,8 @@ typedef enum {
     typeInt,
     typeFloat,
     typeString,
-    typeChar
+    typeChar,
+    typeFunction
 } SubexpressionValueTypeEnum;
 
 #endif

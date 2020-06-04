@@ -80,9 +80,10 @@ static TSymbolTable* currentTable = g_TopLevelUserVariableTable;
 %token 			IF 		"if"
 %token 			ELSE 		"else"
 %token 			WHILE 		"while"
+%token 			FUNCTION 	"function"
 %token 			IFX
 %token 			COMMA 		","
-%type	<node> expr condition assignment statement compound_statement statement_list statement_list_tail declaration loop_head loop_statement prog
+%type	<node> expr condition function assignment statement compound_statement statement_list statement_list_tail declaration loop_head loop_statement prog
 %nonassoc IFX
 %nonassoc ELSE
 
@@ -129,7 +130,8 @@ statement :
   | condition
   | declaration
   | compound_statement
-  | loop_statement;
+  | loop_statement
+  | function;
 
 compound_statement :
   OPENBRACE {
@@ -243,6 +245,17 @@ condition :
   }
   | IF OPENPAREN expr CLOSEPAREN statement ELSE statement {
     $$ = CreateControlFlowNode(typeIfStatement, $3, $5, $7);
+  };
+
+function :
+  FUNCTION IDENTIFIER OPENPAREN CLOSEPAREN OPENBRACE statement_list CLOSEBRACE {
+    TSymbolTableElementPtr funcId = LookupUserVariableTableRecursive(currentTable, *$2);
+    if (NULL != funcId) {
+          yyerror(ErrorMessageVariableNotDeclared(*$2));
+    } else {
+      InsertUserVariableTable(currentTable, *$2, typeFunction, funcId);
+    }
+    $$ = CreateFunctionNode(typeFunctionStatement, $2, $6);
   };
 
 loop_statement :

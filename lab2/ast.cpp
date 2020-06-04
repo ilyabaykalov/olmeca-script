@@ -9,10 +9,10 @@
 
 #include "ast.hpp"
 
-NodeAST *CreateNodeAST(NodeTypeEnum nodetype, const char *opValue, NodeAST *left, NodeAST *right) {
+NodeAST *CreateNodeAST(NodeTypeEnum nodeType, const char *opValue, NodeAST *left, NodeAST *right) {
   NodeAST *a = new NodeAST;
 
-  a->nodetype = nodetype;
+  a->nodeType = nodeType;
   strcpy(a->opValue, opValue);
   a->valueType = left->valueType;
   a->left = left;
@@ -24,7 +24,7 @@ NodeAST *CreateNodeAST(NodeTypeEnum nodetype, const char *opValue, NodeAST *left
 NodeAST *CreateIntegerNode(int integerValue) {
   TValueNode *a = new TValueNode;
 
-  a->nodetype = typeIntConst;
+  a->nodeType = typeIntConst;
   a->valueType = typeInt;
   a->iNumber = integerValue;
 
@@ -34,7 +34,7 @@ NodeAST *CreateIntegerNode(int integerValue) {
 NodeAST *CreateFloatNode(float floatValue) {
   TValueNode *a = new TValueNode;
 
-  a->nodetype = typeFloatConst;
+  a->nodeType = typeFloatConst;
   a->valueType = typeFloat;
   a->fNumber = floatValue;
 
@@ -44,7 +44,7 @@ NodeAST *CreateFloatNode(float floatValue) {
 NodeAST *CreateStringNode(std::string *str) {
   TValueNode *a = new TValueNode;
 
-  a->nodetype = typeStringConst;
+  a->nodeType = typeStringConst;
   a->valueType = typeString;
   if (str == NULL) {
     str = new std::string("");
@@ -57,7 +57,7 @@ NodeAST *CreateStringNode(std::string *str) {
 NodeAST *CreateCharNode(char *c) {
   TValueNode *a = new TValueNode;
 
-  a->nodetype = typeCharConst;
+  a->nodeType = typeCharConst;
   a->valueType = typeChar;
   if (c == NULL) {
     c = new char();
@@ -80,10 +80,10 @@ NodeAST *CreateErrorNode(const char *error) {
   return reinterpret_cast<NodeAST *>(e);
 }
 
-NodeAST *CreateControlFlowNode(NodeTypeEnum nodetype, NodeAST *condition, NodeAST *trueBranch, NodeAST *elseBranch) {
+NodeAST *CreateControlFlowNode(NodeTypeEnum nodeType, NodeAST *condition, NodeAST *trueBranch, NodeAST *elseBranch) {
   TControlFlowNode *a = new TControlFlowNode;
 
-  a->nodetype = nodetype;
+  a->nodeType = nodeType;
   a->condition = condition;
   a->trueBranch = trueBranch;
   a->elseBranch = elseBranch;
@@ -91,10 +91,27 @@ NodeAST *CreateControlFlowNode(NodeTypeEnum nodetype, NodeAST *condition, NodeAS
   return reinterpret_cast<NodeAST *>(a);
 }
 
+NodeAST *CreateFunctionNode(NodeTypeEnum nodeType, std::string *funcName, NodeAST *funcBody) {
+  TFunctionNode *a = new TFunctionNode;
+
+  a->nodeType = nodeType;
+  a->funcBody = funcBody;
+
+  TValueNode *name = new TValueNode;
+
+  name->nodeType = typeStringConst;
+  name->valueType = typeString;
+  name->str = funcName;
+
+  a->funcName = name;
+
+  return reinterpret_cast<NodeAST *>(a);
+}
+
 NodeAST *CreateReferenceNode(TSymbolTableElementPtr symbol) {
   TSymbolTableReference *a = new TSymbolTableReference;
 
-  a->nodetype = typeIdentifier;
+  a->nodeType = typeIdentifier;
   a->variable = symbol;
   a->valueType = symbol->table->data[symbol->index].valueType;
 
@@ -104,7 +121,7 @@ NodeAST *CreateReferenceNode(TSymbolTableElementPtr symbol) {
 NodeAST *CreateAssignmentNode(TSymbolTableElementPtr symbol, NodeAST *rightValue) {
   TAssignmentNode *a = new TAssignmentNode;
 
-  a->nodetype = typeAssignmentOp;
+  a->nodeType = typeAssignmentOp;
   a->variable = symbol;
   a->value = rightValue;
 
@@ -114,7 +131,7 @@ NodeAST *CreateAssignmentNode(TSymbolTableElementPtr symbol, NodeAST *rightValue
 void FreeAST(NodeAST *a) {
   if (NULL == a)
     return;
-  switch (a->nodetype) {
+  switch (a->nodeType) {
     case typeBinaryOp:
     case typeList:
         FreeAST(a->right);
@@ -138,7 +155,7 @@ void FreeAST(NodeAST *a) {
         break;
 
     default:
-        std::cout << "internal error: free bad node " << a->nodetype << std::endl;
+        std::cout << "internal error: free bad node " << a->nodeType << std::endl;
   }
 
   delete a;
@@ -153,7 +170,7 @@ void PrintAST(NodeAST *a, int level) {
       return;
     }
 
-    switch (a->nodetype) {
+    switch (a->nodeType) {
         case typeError:
           std::cout << "error occurred: " << *(((TErrorNode *)a)->error);
           break;
@@ -202,7 +219,6 @@ void PrintAST(NodeAST *a, int level) {
           break;
 
         case typeUnaryOp:
-
           std::cout << "unaryOp " << a->opValue << std::endl;
           PrintAST(a->left, level + 1);
           break;
@@ -241,7 +257,6 @@ void PrintAST(NodeAST *a, int level) {
           break;
 
         case typeWhileStatement:
-
           std::cout << "while loop" << std::endl;
           PrintAST(((TControlFlowNode *)a)->condition, level);
 
@@ -252,7 +267,24 @@ void PrintAST(NodeAST *a, int level) {
             PrintAST(((TControlFlowNode *)a)->trueBranch, level + 1);
           }
           break;
-        }
+
+        case typeFunctionStatement:
+          std::cout << "function ";
+          std::cout << *((((TFunctionNode *)a)->funcName)->str) << std::endl;
+          PrintAST(((TFunctionNode *)a)->funcBody, level);
+
+//          TSymbolTableElementPtr tmp = ((TSymbolTableReference *)a)->variable;
+//          std::cout << "variable ";
+//          std::string name = "";
+//          if (NULL != tmp) {
+//          std::string name = *(tmp->table->data[tmp->index].name);
+//            std::cout << name;
+//          } else {
+//            std::cout << "(bad reference)";
+//            name = "(bad reference)";
+//          }
+          break;
+    }
   }
   catch (const std::exception &e) {}
   return;

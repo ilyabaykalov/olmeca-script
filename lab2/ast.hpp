@@ -16,12 +16,13 @@ typedef enum {
   typeIdentifier,
   typeIfStatement,
   typeWhileStatement,
+  typeFunctionStatement,
   typeList,
   typeError
 } NodeTypeEnum;
 
 typedef struct TAbstractSyntaxTreeNode {
-  NodeTypeEnum nodetype;
+  NodeTypeEnum nodeType;
   SubexpressionValueTypeEnum valueType;
   char opValue[3];
   struct TAbstractSyntaxTreeNode *left;
@@ -29,14 +30,14 @@ typedef struct TAbstractSyntaxTreeNode {
 } NodeAST;
 
 typedef struct {
-  NodeTypeEnum nodetype;
+  NodeTypeEnum nodeType;
   NodeAST *condition;
   NodeAST *trueBranch;
   NodeAST *elseBranch;
 } TControlFlowNode;
 
 typedef struct {
-  NodeTypeEnum nodetype;
+  NodeTypeEnum nodeType;
   SubexpressionValueTypeEnum valueType;
   union {
     int iNumber;
@@ -46,18 +47,24 @@ typedef struct {
   };
 } TValueNode;
 
+typedef struct {
+  NodeTypeEnum nodeType;
+  TValueNode *funcName;
+  NodeAST *funcBody;
+} TFunctionNode;
+
 #ifndef _SYMBOL_TABLE_HPP
 #include "symtable.hpp"
 #endif
 
 typedef struct {
-  NodeTypeEnum nodetype;
+  NodeTypeEnum nodeType;
   SubexpressionValueTypeEnum valueType;
   TSymbolTableElementPtr variable;
 } TSymbolTableReference;
 
 typedef struct {
-  NodeTypeEnum nodetype;
+  NodeTypeEnum nodeType;
   TSymbolTableElementPtr variable;
   NodeAST *value;
 } TAssignmentNode;
@@ -67,14 +74,15 @@ typedef struct {
   std::string *error = new std::string("");
 } TErrorNode;
 
-NodeAST *CreateNodeAST(NodeTypeEnum cmptype, const char *opValue, NodeAST *left, NodeAST *right);
+NodeAST *CreateNodeAST(NodeTypeEnum cmpType, const char *opValue, NodeAST *left, NodeAST *right);
 NodeAST *CreateIntegerNode(int integerValue);
 NodeAST *CreateFloatNode(float floatValue);
 NodeAST *CreateStringNode(std::string *str);
 NodeAST *CreateCharNode(char *ch);
 NodeAST *CreateErrorNode(const char*error);
 
-NodeAST *CreateControlFlowNode(NodeTypeEnum Nodetype, NodeAST *condition, NodeAST *trueBranch, NodeAST *elseBranch);
+NodeAST *CreateControlFlowNode(NodeTypeEnum nodeType, NodeAST *condition, NodeAST *trueBranch, NodeAST *elseBranch);
+NodeAST *CreateFunctionNode(NodeTypeEnum nodeType, std::string *funcName, NodeAST *funcBody);
 NodeAST *CreateReferenceNode(TSymbolTableElementPtr symbol);
 NodeAST *CreateAssignmentNode(TSymbolTableElementPtr symbol, NodeAST *rightValue);
 

@@ -53,6 +53,7 @@ char                            { return token::CHAR_TYPE; }
 if                              { return token::IF; }
 else                            { return token::ELSE; }
 while                           { return token::WHILE; }
+function                        { return token::FUNCTION; }
 
 \;                              { return token::SEMICOLON;}
 \:                              { return token::COLON;}
@@ -71,7 +72,7 @@ while                           { return token::WHILE; }
                                   strcpy(yylval->comparison, yytext);
                                   return token::MULOPERATOR;
                                 }
-">"|"<"|"=="                    {
+">"|"<"|"=="|"!="               {
                                   strcpy(yylval->comparison, yytext);
                                   return token::COMPARE;
                                 }
