@@ -1,0 +1,15 @@
+// comment
+string name = "Ilya";
+string surname;
+integer age;
+char firstLetterName;
+
+//loop
+while (age < 18) {
+    integer r = 1;
+    if (name == "Ilya") {
+        surname = "Baykalov";
+        firstLetterName = 'I';
+        age = 23;
+    }
+}

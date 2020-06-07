@@ -1,0 +1,10 @@
+function sameName() {
+    integer test = 1;
+    integer test1 = 12;
+    integer test12 = 12;
+    integer test13 = 12;
+
+    return 0;
+}
+
+sameName();
