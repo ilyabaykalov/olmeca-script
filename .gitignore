@@ -31,3 +31,8 @@
 /lab2/symtable.o
 /lab2/stack.hh
 /lab2/position.hh
+
+# lab3
+/lab3/olmeca
+/lab3/*.out
+/lab3/runAllTests.py

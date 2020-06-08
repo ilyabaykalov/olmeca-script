@@ -28,6 +28,8 @@ typedef struct TAbstractSyntaxTreeNode {
   char opValue[3];
   struct TAbstractSyntaxTreeNode *left;
   struct TAbstractSyntaxTreeNode *right;
+
+  int tmp_index = -1;
 } NodeAST;
 
 typedef struct {
@@ -84,7 +86,7 @@ NodeAST *CreateCharNode(char *ch);
 NodeAST *CreateErrorNode(const char*error);
 
 NodeAST *CreateControlFlowNode(NodeTypeEnum nodeType, NodeAST *condition, NodeAST *trueBranch, NodeAST *elseBranch);
-NodeAST *CreateFunctionNode(std::string *funcName, NodeAST *funcBody, int returnedValue);
+NodeAST *CreateFunctionNode(std::string *funcName);
 NodeAST *CallFunctionNode(std::string *funcName);
 
 NodeAST *CreateReferenceNode(TSymbolTableElementPtr symbol);

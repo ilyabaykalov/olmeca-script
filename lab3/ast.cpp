@@ -91,11 +91,11 @@ NodeAST *CreateControlFlowNode(NodeTypeEnum nodeType, NodeAST *condition, NodeAS
   return reinterpret_cast<NodeAST *>(a);
 }
 
-NodeAST *CreateFunctionNode(std::string *funcName, NodeAST *funcBody, int returnedValue) {
+NodeAST *CreateFunctionNode(std::string *funcName) {
   TFunctionNode *a = new TFunctionNode;
 
   a->nodeType = typeFunctionStatement;
-  a->funcBody = funcBody;
+//  a->funcBody = funcBody;
 
   TValueNode *name = new TValueNode;
 
@@ -105,13 +105,13 @@ NodeAST *CreateFunctionNode(std::string *funcName, NodeAST *funcBody, int return
 
   a->funcName = name;
 
-  TValueNode *retVal = new TValueNode;
+//  TValueNode *retVal = new TValueNode;
 
-  retVal->nodeType = typeIntConst;
-  retVal->valueType = typeInt;
-  retVal->iNumber = returnedValue;
+//  retVal->nodeType = typeIntConst;
+//  retVal->valueType = typeInt;
+//  retVal->iNumber = returnedValue;
 
-  a->returnedValue = retVal;
+//  a->returnedValue = retVal;
 
   return reinterpret_cast<NodeAST *>(a);
 }

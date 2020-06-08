@@ -4,12 +4,25 @@ string surname;
 integer age;
 char firstLetterName;
 
-//loop
-while (age < 18) {
-    integer r = 1;
-    if (name == "Ilya") {
-        surname = "Baykalov";
-        firstLetterName = 'I';
-        age = 23;
+age = 23;
+
+sameName();
+
+function sameName() {
+    while (age < 18) {
+        integer r = 1;
+        if (name != "Ilya") {
+            surname = "Baykalov";
+            age = 23;
+            age= age - 2 * 3;
+        } else {
+            surname = "NeBaykalov";
+        }
+
+        if (age == 23) {
+            firstLetterName = 'I';
+        }
     }
+
+    return age;
 }
