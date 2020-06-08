@@ -1,18 +1,19 @@
 # Olmeca Script
 
-## lab 1
-### Отчет lab1.pdf находится в папке lab1
+## lab 3
+### Отчет lab3.pdf находится в папке lab3
 
 Запуск:
 
 ```sh
-$ cd lab1/
-$ flex tokens.l
-$ cc lex.yy.c
-$ ./a.out
+$ cd lab3/
+$ make; make clean
+$ ./olmeca "путь до тестируемого файла без кавычек"
 ```
-Далее неободимо указать путь к  файлу
-
+Пример:
+```sh
+$ ./olmeca tests/prog.olm
+```
 Файлы для тестов находятся в папке tests/
 
 ##
@@ -33,18 +34,18 @@ $ ./olmeca tests/prog.olm
 Файлы для тестов находятся в папке tests/
 
 ##
-## lab 3
-### Отчет lab3.pdf находится в папке lab3
+## lab 1
+### Отчет lab1.pdf находится в папке lab1
 
 Запуск:
 
 ```sh
-$ cd lab3/
-$ make; make clean
-$ ./olmeca "путь до тестируемого файла без кавычек"
+$ cd lab1/
+$ flex tokens.l
+$ cc lex.yy.c
+$ ./a.out
 ```
-Пример:
-```sh
-$ ./olmeca tests/prog.olm
-```
+Далее неободимо указать путь к  файлу
+
 Файлы для тестов находятся в папке tests/
+
